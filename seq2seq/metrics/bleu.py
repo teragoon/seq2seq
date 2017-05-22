@@ -69,8 +69,8 @@ def moses_multi_bleu(hypotheses, references, lowercase=False):
   reference_file.flush()
 
   # Calculate BLEU using multi-bleu script
-  with open(hypothesis_file.name, "r") as read_pred:
-    bleu_cmd = [multi_bleu_path]
+  with open(hypothesis_file.name, "r", opener=temp_opener) as read_pred:
+    bleu_cmd = ["perl.exe", multi_bleu_path]
     if lowercase:
       bleu_cmd += ["-lc"]
     bleu_cmd += [reference_file.name]
@@ -89,5 +89,8 @@ def moses_multi_bleu(hypotheses, references, lowercase=False):
   # Close temp files
   hypothesis_file.close()
   reference_file.close()
-
   return np.float32(bleu_score)
+
+
+def temp_opener(name, flag, mode=0o777):
+  return os.open(name, flag | os.O_TEMPORARY, mode)

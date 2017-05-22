@@ -127,11 +127,11 @@ class MetadataCaptureHook(TrainingHook):
         tf.logging.info("Saved timeline to %s", timeline_path)
 
       # Save tfprof op log
-      tf.contrib.tfprof.tfprof_logger.write_op_log(
+      """tf.contrib.tfprof.tfprof_logger.write_op_log(
           graph=tf.get_default_graph(),
           log_dir=self._output_dir,
-          run_meta=run_values.run_metadata)
-      tf.logging.info("Saved op log to %s", self._output_dir)
+          run_meta=run_values.run_metadata)"""
+      tf.logging.info("CAN NOT Saved op log to %s ON Windows OS", self._output_dir)
       self._active = False
       self._done = True
 
@@ -243,8 +243,10 @@ class PrintModelAnalysisHook(TrainingHook):
   def begin(self):
     # Dump to file on the chief worker
     if self.is_chief:
+      #opts = tf.contrib.tfprof.model_analyzer.TRAINABLE_VARS_PARAMS_STAT_OPTIONS
       opts = tf.contrib.tfprof.model_analyzer.TRAINABLE_VARS_PARAMS_STAT_OPTIONS
       opts['dump_to_file'] = os.path.abspath(self._filename)
+      #tf.contrib.tfprof.model_analyzer.print_model_analysis(
       tf.contrib.tfprof.model_analyzer.print_model_analysis(
           tf.get_default_graph(), tfprof_options=opts)
 

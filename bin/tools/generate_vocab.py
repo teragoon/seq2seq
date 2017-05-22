@@ -45,7 +45,7 @@ parser.add_argument(
 parser.add_argument(
     "infile",
     nargs="?",
-    type=argparse.FileType("r"),
+    type=argparse.FileType("r", encoding='UTF8'),
     default=sys.stdin,
     help="Input tokenized text file to be processed.")
 parser.add_argument(
